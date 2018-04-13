@@ -25,9 +25,11 @@ function spawn(command, args) {
   })
 }
 
+const command = /^win/.test(process.platform) ? 'npm.cmd' : 'npm'
+
 async function precommit() {
-  await spawn('npm', ['run', '--silent', 'lint'])
-  await spawn('npm', ['run', '--silent', 'test'])
+  await spawn(command, ['run', '--silent', 'lint'])
+  await spawn(command, ['run', '--silent', 'test'])
 }
 
 module.exports = precommit()
