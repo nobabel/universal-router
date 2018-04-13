@@ -23,7 +23,7 @@
   "module": "module.js",
   "esnext": "src/UniversalRouter.js",
   "dependencies": {
-    "path-to-regexp": "^2.2.0"
+    "path-to-regexp": "https://github.com/nobabel/path-to-regexp/releases/download/2.2.0-nobabel/path-to-regexp-2.2.0-nobabel.tgz"
   },
   "devDependencies": {
     "@babel/core": "7.0.0-beta.44",

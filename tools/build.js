@@ -101,20 +101,24 @@ async function build() {
         external: file.external,
         plugins: [
           ...(file.format === 'umd' ? [nodeResolve({ browser: true }), commonjs()] : []),
-          babel({
-            babelrc: false,
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  modules: false,
-                  loose: true,
-                  exclude: ['transform-typeof-symbol'],
-                },
-              ],
-            ],
-            comments: false,
-          }),
+          ...(file.format !== 'es'
+            ? [
+                babel({
+                  babelrc: false,
+                  presets: [
+                    [
+                      '@babel/preset-env',
+                      {
+                        modules: false,
+                        loose: true,
+                        exclude: ['transform-typeof-symbol'],
+                      },
+                    ],
+                  ],
+                  comments: false,
+                }),
+              ]
+            : []),
           ...(file.output.endsWith('.min.js') ? [uglify({ output: { comments: '/^!/' } })] : []),
         ],
       })
