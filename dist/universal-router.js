@@ -6,16 +6,11 @@
   (global.UniversalRouter = factory());
 }(this, (function () { 'use strict';
 
-  var pathToRegexp_1 = pathToRegexp;
-  var parse_1 = parse;
-  var compile_1 = compile;
-  var tokensToFunction_1 = tokensToFunction;
-  var tokensToRegExp_1 = tokensToRegExp;
   var DEFAULT_DELIMITER = '/';
   var DEFAULT_DELIMITERS = './';
   var PATH_REGEXP = new RegExp(['(\\\\.)', '(?:\\:(\\w+)(?:\\(((?:\\\\.|[^\\\\()])+)\\))?|\\(((?:\\\\.|[^\\\\()])+)\\))([+*?])?'].join('|'), 'g');
 
-  function parse(str, options) {
+  var parse = function parse(str, options) {
     var tokens = [];
     var key = 0;
     var index = 0;
@@ -81,95 +76,21 @@
     }
 
     return tokens;
-  }
+  };
 
-  function compile(str, options) {
-    return tokensToFunction(parse(str, options));
-  }
-
-  function tokensToFunction(tokens) {
-    var matches = new Array(tokens.length);
-
-    for (var i = 0; i < tokens.length; i++) {
-      if (typeof tokens[i] === 'object') {
-        matches[i] = new RegExp('^(?:' + tokens[i].pattern + ')$');
-      }
-    }
-
-    return function (data, options) {
-      var path = '';
-      var encode = options && options.encode || encodeURIComponent;
-
-      for (var i = 0; i < tokens.length; i++) {
-        var token = tokens[i];
-
-        if (typeof token === 'string') {
-          path += token;
-          continue;
-        }
-
-        var value = data ? data[token.name] : undefined;
-        var segment;
-
-        if (Array.isArray(value)) {
-          if (!token.repeat) {
-            throw new TypeError('Expected "' + token.name + '" to not repeat, but got array');
-          }
-
-          if (value.length === 0) {
-            if (token.optional) continue;
-            throw new TypeError('Expected "' + token.name + '" to not be empty');
-          }
-
-          for (var j = 0; j < value.length; j++) {
-            segment = encode(value[j], token);
-
-            if (!matches[i].test(segment)) {
-              throw new TypeError('Expected all "' + token.name + '" to match "' + token.pattern + '"');
-            }
-
-            path += (j === 0 ? token.prefix : token.delimiter) + segment;
-          }
-
-          continue;
-        }
-
-        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-          segment = encode(String(value), token);
-
-          if (!matches[i].test(segment)) {
-            throw new TypeError('Expected "' + token.name + '" to match "' + token.pattern + '", but got "' + segment + '"');
-          }
-
-          path += token.prefix + segment;
-          continue;
-        }
-
-        if (token.optional) {
-          if (token.partial) path += token.prefix;
-          continue;
-        }
-
-        throw new TypeError('Expected "' + token.name + '" to be ' + (token.repeat ? 'an array' : 'a string'));
-      }
-
-      return path;
-    };
-  }
-
-  function escapeString(str) {
+  var escapeString = function escapeString(str) {
     return str.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1');
-  }
+  };
 
-  function escapeGroup(group) {
+  var escapeGroup = function escapeGroup(group) {
     return group.replace(/([=!:$/()])/g, '\\$1');
-  }
+  };
 
-  function flags(options) {
+  var flags = function flags(options) {
     return options && options.sensitive ? '' : 'i';
-  }
+  };
 
-  function regexpToRegexp(path, keys) {
+  var regexpToRegexp = function regexpToRegexp(path, keys) {
     if (!keys) return path;
     var groups = path.source.match(/\((?!\?)/g);
 
@@ -188,9 +109,9 @@
     }
 
     return path;
-  }
+  };
 
-  function arrayToRegexp(path, keys, options) {
+  var arrayToRegexp = function arrayToRegexp(path, keys, options) {
     var parts = [];
 
     for (var i = 0; i < path.length; i++) {
@@ -198,13 +119,13 @@
     }
 
     return new RegExp('(?:' + parts.join('|') + ')', flags(options));
-  }
+  };
 
-  function stringToRegexp(path, keys, options) {
+  var stringToRegexp = function stringToRegexp(path, keys, options) {
     return tokensToRegExp(parse(path, options), keys, options);
-  }
+  };
 
-  function tokensToRegExp(tokens, keys, options) {
+  var tokensToRegExp = function tokensToRegExp(tokens, keys, options) {
     options = options || {};
     var strict = options.strict;
     var end = options.end !== false;
@@ -246,9 +167,9 @@
     }
 
     return new RegExp('^' + route, flags(options));
-  }
+  };
 
-  function pathToRegexp(path, keys, options) {
+  var pathToRegexp = function pathToRegexp(path, keys, options) {
     if (path instanceof RegExp) {
       return regexpToRegexp(path, keys);
     }
@@ -258,11 +179,7 @@
     }
 
     return stringToRegexp(path, keys, options);
-  }
-  pathToRegexp_1.parse = parse_1;
-  pathToRegexp_1.compile = compile_1;
-  pathToRegexp_1.tokensToFunction = tokensToFunction_1;
-  pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
+  };
 
   var hasOwnProperty = Object.prototype.hasOwnProperty;
   var cache = new Map();
@@ -284,7 +201,7 @@
       var keys = [];
       regexp = {
         keys: keys,
-        pattern: pathToRegexp_1(route.path || '', keys, {
+        pattern: pathToRegexp(route.path || '', keys, {
           end: end
         })
       };
@@ -490,7 +407,7 @@
     return UniversalRouter;
   }();
 
-  UniversalRouter.pathToRegexp = pathToRegexp_1;
+  UniversalRouter.pathToRegexp = pathToRegexp;
 
   return UniversalRouter;
 

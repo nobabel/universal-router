@@ -89,6 +89,8 @@ async function build() {
   // Copy source code, readme and license
   await Promise.all([
     fs.copy('src', 'dist/src'),
+    fs.copy('index.d.ts', 'dist/index.d.ts'),
+    fs.copy('generateUrls.d.ts', 'dist/generateUrls.d.ts'),
     fs.copy('README.md', 'dist/README.md'),
     fs.copy('LICENSE.txt', 'dist/LICENSE.txt'),
   ])
