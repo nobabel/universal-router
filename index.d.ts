@@ -24,7 +24,7 @@ export interface ResolveContext extends Context {
 }
 
 export interface Route<T = any> {
-  action: (context: ActionContext<T>, params: Params) => T;
+  action?: (context: ActionContext<T>, params: Params) => T;
   children?: Array<Route>;
   name?: string;
   path?: string;

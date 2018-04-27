@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "universal-router",
-  "version": "6.0.0-nobabel.1",
+  "version": "6.0.0-nobabel.2",
   "description": "Isomorphic router for JavaScript web applications",
   "homepage": "https://www.kriasoft.com/universal-router/",
   "repository": "kriasoft/universal-router",
